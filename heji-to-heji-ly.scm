@@ -10,7 +10,7 @@
     (for-each 
         (lambda (factor prime)
             (if (and (> prime 3) (not (= factor 0)))
-                (let ((prefix (if (> factor 0) "o" "u"))
+                (let ((prefix (if (> factor 0) "u" "o"))
                       (exponent (abs factor)))
                     (set! tokens 
                         (cons 
