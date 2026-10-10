@@ -102,13 +102,14 @@
 
 (define (ratio-and-reference-to-pitch ratio pitch octave alter)
     (define num-fifths-per-prime '(0 1 4 -2 -1 3 7 -3 6 -2 0 2 4 -1 1))
+    (define num-octaves-per-prime '(1 0 -4 6 5 -1 -7 9 -5 8 5 4 -1 7 4))
     (let* 
         ((final-ratio (* ratio (pitch-to-ratio pitch octave alter)))
          (factors (ratio-to-harmonic-space final-ratio))
-         (fifths (map * factors num-fifths-per-prime))
-         (fifths-sum (apply + fifths))
+         (fifths-sum (apply + (map * factors num-fifths-per-prime)))
+         (octaves-sum (apply + (map * factors num-octaves-per-prime)))
          (pitch (modulo (* fifths-sum 4) 7))
-         (octave (inexact->exact (floor (/ (log final-ratio) (log 2)))))
+         (octave (+ octaves-sum (inexact->exact (floor (/ (log (expt 3 fifths-sum)) (log 2))))))
          (alter (/ (floor (/ (+ fifths-sum 1) 7)) 2))) ;; Need to check the offset
         (cons pitch (list octave alter))))
     
