@@ -112,20 +112,3 @@
          (octave (+ octaves-sum (inexact->exact (floor (/ (log (expt 3 fifths-sum)) (log 2))))))
          (alter (/ (floor (/ (+ fifths-sum 1) 7)) 2))) ;; Need to check the offset
         (cons pitch (list octave alter))))
-    
-(pitch-and-alteration-to-ratio 4 1 0 "u11o13+7^3")
-
-(alteration-to-factors "u11 o13 +7^3")
-
-(alteration-to-factors "u11o19+7")
-
-(ratio-and-reference-to-pitch 1 5 0 0)
-(ratio-and-reference-to-pitch 1 5 1 0)
-(ratio-and-reference-to-pitch 1 5 2 0)
-(ratio-and-reference-to-pitch 2 5 1 0)
-(ratio-and-reference-to-pitch 3/2 5 2 0)
-(ratio-and-reference-to-pitch 81/80 5 2 0)
-(ratio-and-reference-to-pitch 70805/41067 5 2 0)
-(ratio-and-reference-to-pitch 212415/5537792 5 2 0)
-(ratio-and-reference-to-pitch 10460353203/8589934592 5 2 0)
-(ratio-and-reference-to-pitch 8589934592/10460353203 5 2 0)
