@@ -1,10 +1,13 @@
-(load "heji-ratios.scm")
+
+;; N.B. current-filename is #f when evaluated in a REPL, so fall back to the working directory.
+(add-to-load-path (if (current-filename) (dirname (current-filename)) (getcwd)))
+(use-modules (heji-pitch-conversions) (heji-alterations))
 
 (pitch-and-alteration-to-ratio 4 1 0 "u11o13+7^3")
 
-(alteration-to-factors "u11 o13 +7^3")
+(alteration-to-harmonic-space "u11 o13 +7^3")
 
-(alteration-to-factors "u11o19+7")
+(alteration-to-harmonic-space "u11o19+7")
 
 (pitch-to-ratio 5 0 0)
 
