@@ -6,11 +6,11 @@
 (use-modules (ice-9 regex) (heji-constants) (heji-harmonic-space))
 
 ;; Find the index for a prime number in the heji-primes list.
-;; The search starts from the supplied index. 
+;; The search starts from the supplied index.
 ;; Returns #f if the value is not found.
 (define (find-prime val idx)
-    (cond 
-        ((>= idx (length heji-primes)) #f) 
+    (cond
+        ((>= idx (length heji-primes)) #f)
         ((= (list-ref heji-primes idx) val) idx)
         (else (find-prime val (+ idx 1)))))
 
@@ -31,7 +31,7 @@
 ;; Optionally this can be followed by ^ and a second integer to indicate the exponent.
 (define alteration-regex (make-regexp "^([uo+\\-])([0-9]+)(\\^[0-9]+)?"))
 
-;; Split a string into a list of alteration tokens. 
+;; Split a string into a list of alteration tokens.
 ;; Returns #f if the string cannot be matched in its entirety.
 ;; This function doesn't validate the numbers within tokens.
 (define (split-alteration str tokens)
@@ -52,16 +52,16 @@
     (define factors (make-list (length heji-primes) 0))
     (if elements
         (for-each (lambda (token)
-            (let* 
+            (let*
                 ((matched (regexp-exec alteration-regex token))
                  (prefix (match:substring matched 1))
                  (prime (string->number (match:substring matched 2)))
                  (exponent (parse-ex (match:substring matched 3)))
                  (prime-index (find-prime  prime 0)))
                 (if (and prime-index (>= prime-index 1))
-                    (let 
+                    (let
                         ((direction (direction-factor prefix prime-index)))
                         (list-set! factors prime-index (+ (list-ref factors prime-index) (* direction exponent))))
                     #f)))
-                elements)) 
+                elements))
             factors)

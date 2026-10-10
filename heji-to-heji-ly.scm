@@ -7,17 +7,17 @@
 
 (define (harmonic-space-to-heji-ly-alteration factors)
     (define tokens '())
-    (for-each 
+    (for-each
         (lambda (factor prime)
             (if (and (> prime 3) (not (= factor 0)))
                 (let ((prefix (if (> factor 0) "u" "o"))
                       (exponent (abs factor)))
-                    (set! tokens 
-                        (cons 
-                            (string-append prefix 
-                                (number->string prime) 
-                                (if (> exponent 1) 
-                                    (string-append "^" (number->string exponent)) 
+                    (set! tokens
+                        (cons
+                            (string-append prefix
+                                (number->string prime)
+                                (if (> exponent 1)
+                                    (string-append "^" (number->string exponent))
                                     ""))
                             tokens)))))
         factors heji-primes)

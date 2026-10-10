@@ -23,11 +23,11 @@
             (* (list-ref note-ratios pitch) (harmonic-space-to-ratio factors)))
         #f))
 
-;; Note that num-octaves-per-prime keeps factors of 2 and 3 separate and we evaluate both to get the final octave. 
+;; Note that num-octaves-per-prime keeps factors of 2 and 3 separate and we evaluate both to get the final octave.
 (define (ratio-and-reference-to-pitch ratio pitch octave alter)
     (define num-fifths-per-prime '(0 1 4 -2 -1 3 7 -3 6 -2 0 2 4 -1 1))
-    (define num-octaves-per-prime '(1 0 -4 6 5 -1 -7 9 -5 8 5 4 -1 7 4))    
-    (let* 
+    (define num-octaves-per-prime '(1 0 -4 6 5 -1 -7 9 -5 8 5 4 -1 7 4))
+    (let*
         ((final-ratio (* ratio (pitch-to-ratio pitch octave alter)))
          (factors (ratio-to-harmonic-space final-ratio))
          (fifths-sum (apply + (map * factors num-fifths-per-prime)))
