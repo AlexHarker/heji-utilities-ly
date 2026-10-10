@@ -5,22 +5,31 @@
 #(add-to-load-path (dirname (current-filename)))
 #(use-modules (heji-to-heji-ly) (heji-pitch-conversions))
 
+heji =
+#(define-music-function (note alteration) (ly:music? string?)
+    #{ \ji #alteration $note #} )
+
+makenote =
+#(define-music-function (note) (ly:music?)
+    #{ $note #} )
+
+#(define heji-duration #f)
+#(define last-default-duration #f)
+
 heji-relative =
-#(define-music-function (ratio note) (rational? ly:music?)
-    (let* 
-        ((event (if (eq? (ly:music-property note 'name) 'NoteEvent) note #f)))
-        (if (not event)
-            (begin
-                (ly:music-warning note "heji-relative: expected a note event")
-                (make-music 'Music 'void #t))
-            (let* 
-                ((pitch (ly:music-property event 'pitch))
-                 (heji-pitch (* ratio (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch))))
-                 (heji-ly (ratio-to-heji-ly heji-pitch))
-                 (alteration (cdr heji-ly)))
-                (begin
-                    (ly:music-set-property! note 'pitch (ly:make-pitch (cdar heji-ly) (caar heji-ly) 0))
-                    #{ \ji #alteration #note #} )))))
+#(define-music-function (note duration ratio) (ly:pitch?  (ly:duration? #f) rational?)
+    (let*
+        ((heji-pitch (* ratio (pitch-to-ratio (ly:pitch-notename note) (ly:pitch-octave note) (ly:pitch-alteration note))))
+         (heji-ly (ratio-to-heji-ly heji-pitch))
+         (alteration (cdr heji-ly))
+         (pitch (ly:make-pitch (cdar heji-ly) (caar heji-ly) 0))
+         (current-duration (ly:music-property #{ \makenote $pitch #} 'duration))
+         (this-duration (if duration duration (if (equal? current-duration last-default-duration) heji-duration current-duration)))
+         (event (make-music 'NoteEvent 'pitch pitch 'duration this-duration)))
+        (begin 
+            (set! heji-duration this-duration)
+            (set! last-default-duration current-duration)
+            #{ \heji #event #alteration #} )))
 
 
 
