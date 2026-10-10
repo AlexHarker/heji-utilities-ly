@@ -1,7 +1,6 @@
-
 ;; N.B. current-filename is #f when evaluated in a REPL, so fall back to the working directory.
 (add-to-load-path (if (current-filename) (dirname (current-filename)) (getcwd)))
-(use-modules (heji-pitch-conversions) (heji-alterations))
+(use-modules (heji-pitch-conversions) (heji-alterations) (heji-to-heji-ly))
 
 (pitch-and-alteration-to-ratio 4 1 0 "u11o13+7^3")
 
@@ -22,3 +21,5 @@
 (ratio-and-reference-to-pitch 212415/5537792 5 2 0)
 (ratio-and-reference-to-pitch 10460353203/8589934592 5 2 0)
 (ratio-and-reference-to-pitch 8589934592/10460353203 5 2 0)
+
+(ratio-to-heji-ly 212415/5537792)
