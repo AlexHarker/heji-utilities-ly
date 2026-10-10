@@ -32,7 +32,7 @@
             1
             (* (expt (car ratios) (car exponents))
                (product-of-ratios (cdr ratios) (cdr exponents)))))
-    (product-of-ratios heji-ratios factors))
+    (product-of-ratios heji-primes factors))
 
 
 
