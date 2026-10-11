@@ -11,6 +11,9 @@
 #(define (heji-note-event? x)
     (and (pitch-event? x) (ly:music-property x 'alteration #f)))
 
+#(define (rational-or-string? x)
+    (or (rational? x) (string? x)))
+
 heji-direct =
 #(define-music-function (note) (heji-note-event?)
     (let*
@@ -36,13 +39,15 @@ heji-relative =
          (heji-pitch (* ratio (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))
          #{ \heji-core #note #heji-pitch #} ))
 
-heji =
+heji-alteration =
 #(define-music-function (note alteration) (pitch-event? string?)
     (let*
         ((pitch (ly:music-property note 'pitch))
          (heji-pitch (pitch-and-alteration-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch) alteration)))
          #{ \heji-core #note #heji-pitch #} ))
 
-
-
-
+heji =
+#(define-music-function (note ratio-or-alteration) (pitch-event? rational-or-string?)
+    (if (string? ratio-or-alteration)
+        #{ \heji-alteration #note #ratio-or-alteration #}
+        #{ \heji-relative #note #ratio-or-alteration #} ))
