@@ -3,7 +3,7 @@
 
 (add-to-load-path (dirname (current-filename)))
 
-(use-modules (heji-constants))
+(use-modules (heji-core))
 
 ;; Factorise an integer into its constituent prime factors;
 ;; Returns a list of the exponents of the primes in heji-primes.
@@ -27,12 +27,7 @@
 
 ;; Convert a list of factors corresponding to the Tenney harmonic space as covered by the heji-primes to a ratio
 (define (harmonic-space-to-ratio factors)
-    (define (product-of-ratios ratios exponents)
-        (if (null? ratios)
-            1
-            (* (expt (car ratios) (car exponents))
-               (product-of-ratios (cdr ratios) (cdr exponents)))))
-    (product-of-ratios heji-primes factors))
+    (sum-of-ratios heji-primes factors))
 
 
 

@@ -1,9 +1,9 @@
 (define-module (heji-alterations)
-    #:export (alteration-to-harmonic-space))
+    #:export (alteration-to-exponents))
 
 (add-to-load-path (dirname (current-filename)))
 
-(use-modules (ice-9 regex) (heji-constants) (heji-harmonic-space))
+(use-modules (ice-9 regex) (heji-core) (heji-harmonic-space))
 
 ;; Find the index for a prime number in the heji-primes list.
 ;; The search starts from the supplied index.
@@ -44,9 +44,10 @@
                 (cons (match:substring m) tokens)))
             (else #f))))
 
-;; Convert an alteration string to a list of factors corresponding to the Tenney harmonic space as covered by the heji-primes
+;; Convert an alteration string to a list of exponent corresponding to the number of commas reuired with direction
+;; Note that these exponents are not the same as the factors in the harmonic space, but they can be used to derive them.
 ;; Returns the factors list if successful, or #f if the alteration string is invalid.
-(define (alteration-to-harmonic-space alteration)
+(define (alteration-to-exponents alteration)
     (define (parse-ex ex) (if ex (string->number (substring ex 1)) 1))
     (define elements (split-alteration alteration '()))
     (define factors (make-list (length heji-primes) 0))
