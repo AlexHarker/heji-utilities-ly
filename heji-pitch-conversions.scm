@@ -13,7 +13,7 @@
         (* (expt 2 octave) (list-ref note-ratios pitch) (expt 2187/2048 (* alter 2)))
         #f))
 
-; Take a pitch (0-6), an octave (0-6), and an alter factior (in wholetones) plus an algeration and return a ratio.
+; Take a pitch (0-6), an octave (0-6), and an alter factior (in wholetones) plus an alteration and return a ratio.
 (define (pitch-and-alteration-to-ratio pitch octave alter alteration)
     (define factors (alteration-to-harmonic-space alteration))
     (if (and (and (>= pitch 0) (<= pitch 6) (integer? (* alter 2)) factors))
