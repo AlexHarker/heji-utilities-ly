@@ -39,6 +39,15 @@ heji-relative =
          (heji-pitch (* ratio (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))
          #{ \heji-render #note #heji-pitch #} ))
 
+heji-relative-normalised =
+#(define-music-function (octave note ratio) ((integer? #f) pitch-event? rational?)
+    (let*
+        ((pitch (ly:music-property note 'pitch))
+         (heji-pitch (* (expt 2 (if octave octave 0)) (normalise-ratio
+                      (* ratio
+                      (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))))
+         #{ \heji-render #note #heji-pitch #} ))
+
 heji-alteration =
 #(define-music-function (note alteration) (pitch-event? string?)
     (let*
@@ -46,17 +55,21 @@ heji-alteration =
          (heji-pitch (pitch-and-alteration-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch) alteration)))
          #{ \heji-render #note #heji-pitch #} ))
 
-heji =
-#(define-music-function (note ratio-or-alteration) (pitch-event? rational-or-string?)
-    (if (string? ratio-or-alteration)
-        #{ \heji-alteration #note #ratio-or-alteration #}
-        #{ \heji-relative #note #ratio-or-alteration #} ))
-
-heji-n =
-#(define-music-function (octave note ratio) ((integer?) pitch-event? rational?)
+heji-alteration-normalised =
+#(define-music-function (octave note alteration) ((integer? #f) pitch-event? string?)
     (let*
         ((pitch (ly:music-property note 'pitch))
          (heji-pitch (* (expt 2 (if octave octave 0)) (normalise-ratio
-                      (* ratio
-                      (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))))
+                      (pitch-and-alteration-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch) alteration)))))
          #{ \heji-render #note #heji-pitch #} ))
+
+heji =
+#(define-music-function (octave note ratio-or-alteration) ((integer? #f) pitch-event? rational-or-string?)
+    (if (string? ratio-or-alteration)
+        (if octave
+            #{ \heji-alteration-normalised #octave #note #ratio-or-alteration #}
+            #{ \heji-alteration #note #ratio-or-alteration #}
+        )
+        (if octave
+            #{ \heji-relative-normalised #octave #note #ratio-or-alteration #}
+            #{ \heji-relative #note #ratio-or-alteration #} )))
