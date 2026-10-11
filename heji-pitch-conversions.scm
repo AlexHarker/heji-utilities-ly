@@ -3,7 +3,7 @@
 
 (add-to-load-path (dirname (current-filename)))
 
-(use-modules (heji-constants) (heji-harmonic-space) (heji-alterations))
+(use-modules (heji-core) (heji-harmonic-space) (heji-alterations))
 
 ;; This file contains functions for converting between pitch and ratio representations of notes.
 
@@ -15,12 +15,12 @@
 
 ; Take a pitch (0-6), an octave (0-6), and an alter factior (in wholetones) plus an alteration and return a ratio.
 (define (pitch-and-alteration-to-ratio pitch octave alter alteration)
-    (define factors (alteration-to-harmonic-space alteration))
+    (define factors (alteration-to-exponents alteration))
     (if (and (and (>= pitch 0) (<= pitch 6) (integer? (* alter 2)) factors))
         (begin
             (list-set! factors 0 (+ (list-ref factors 0) octave))
             (list-set! factors 1 (+ (list-ref factors 1) (* alter 2)))
-            (* (list-ref note-ratios pitch) (harmonic-space-to-ratio factors)))
+            (* (list-ref note-ratios pitch) (sum-of-ratios heji-ratios factors)))
         #f))
 
 ;; Note that num-octaves-per-prime keeps factors of 2 and 3 separate and we evaluate both to get the final octave.
