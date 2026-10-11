@@ -1,5 +1,5 @@
 (define-module (heji-core)
-    #:export (heji-primes heji-ratios heji-otonal note-ratios sum-of-ratios))
+    #:export (heji-primes heji-ratios heji-otonal note-ratios sum-of-ratios normalise-ratio))
 
 ;; A list of valid primes for the heji system.
 (define heji-primes '(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47))
@@ -19,3 +19,10 @@
     (if (null? ratios)
         1
         (* (expt (car ratios) (car exponents)) (sum-of-ratios (cdr ratios) (cdr exponents)))))
+
+;; Helper function to normalise a ratio to the range [1, 2) by dividing or multiplying by 2 as necessary.
+(define (normalise-ratio ratio)
+    (cond
+        ((< ratio 1) (normalise-ratio (* ratio 2)))
+        ((>= ratio 2) (normalise-ratio (/ ratio 2)))
+        (else ratio)))

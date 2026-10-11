@@ -3,7 +3,7 @@
 
 (add-to-load-path (dirname (current-filename)))
 
-(use-modules (heji-core)(heji-harmonic-space) (heji-pitch-conversions))
+(use-modules (heji-core) (heji-harmonic-space) (heji-pitch-conversions))
 
 (define (harmonic-space-to-heji-ly-alteration factors)
     (define tokens '())
