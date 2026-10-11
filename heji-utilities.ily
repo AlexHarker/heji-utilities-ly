@@ -12,10 +12,6 @@ makenote =
 #(define-music-function (note) (ly:music?)
     #{ $note #} )
 
-heji-render =
-#(define-music-function (note alteration) (ly:music? string?)
-    #{ \ji #alteration $note #} )
-
 #(define (duration-or-false? obj)
   (or (not obj) (ly:duration? obj)))
 
@@ -29,9 +25,10 @@ heji-core =
          (this-duration (if duration duration (if (equal? current-duration last-default-duration) heji-duration current-duration)))
          (event (make-music 'NoteEvent 'pitch pitch 'duration this-duration)))
         (begin
+            (display (list this-duration current-duration last-default-duration heji-duration))(newline)
             (set! heji-duration this-duration)
             (set! last-default-duration current-duration)
-            #{ \heji-render #event #alteration #} )))
+            #{ \ji #alteration #event #} )))
 
 heji =
 #(define-music-function (note duration alteration) (ly:pitch? (ly:duration? #f) string?)
