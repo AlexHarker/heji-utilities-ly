@@ -6,7 +6,7 @@
 #(use-modules (heji-to-heji-ly) (heji-pitch-conversions))
 
 heji-relative =
-#(define-music-function (ratio note) (rational? ly:music?)
+#(define-music-function (note ratio) (ly:music? rational?)
     (let* 
         ((event (if (eq? (ly:music-property note 'name) 'NoteEvent) note #f)))
         (if (not event)
