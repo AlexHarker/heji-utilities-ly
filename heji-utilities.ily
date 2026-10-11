@@ -8,6 +8,17 @@
 #(define (pitch-event? x)
     (and (ly:music? x) (eq? (ly:music-property x 'name) 'NoteEvent)))
 
+#(define (heji-note-event? x)
+    (and (pitch-event? x) (ly:music-property x 'alteration #f)))
+
+heji-direct =
+#(define-music-function (note) (heji-note-event?)
+    (let* 
+        ((alteration (ly:music-property note 'alteration)))
+        ( begin 
+            (ly:music-set-property! note 'tweaks #f)
+            #{ \ji #alteration #note #} )))
+
 heji-core =
 #(define-music-function (note heji-pitch) (pitch-event? rational?)
     (let* 
@@ -15,6 +26,7 @@ heji-core =
          (alteration (cdr heji-ly)))
         (begin
             (ly:music-set-property! note 'pitch (ly:make-pitch (cdar heji-ly) (caar heji-ly) 0))
+            (ly:music-set-property! note 'alteration alteration)
             #{ \ji #alteration #note #} )))
 
 heji-relative =
