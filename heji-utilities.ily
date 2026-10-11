@@ -53,8 +53,10 @@ heji =
         #{ \heji-relative #note #ratio-or-alteration #} ))
 
 heji-n =
-#(define-music-function (note ratio) (pitch-event? rational?)
+#(define-music-function (octave note ratio) ((integer?) pitch-event? rational?)
     (let*
         ((pitch (ly:music-property note 'pitch))
-         (heji-pitch (normalise-ratio (* ratio (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch))))))
+         (heji-pitch (* (expt 2 (if octave octave 0)) (normalise-ratio
+                      (* ratio
+                      (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))))
          #{ \heji-render #note #heji-pitch #} ))
