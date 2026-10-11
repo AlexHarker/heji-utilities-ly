@@ -25,7 +25,6 @@ heji-core =
          (this-duration (if duration duration (if (equal? current-duration last-default-duration) heji-duration current-duration)))
          (event (make-music 'NoteEvent 'pitch pitch 'duration this-duration)))
         (begin
-            (display (list this-duration current-duration last-default-duration heji-duration))(newline)
             (set! heji-duration this-duration)
             (set! last-default-duration current-duration)
             #{ \ji #alteration #event #} )))
