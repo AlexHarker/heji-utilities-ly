@@ -3,7 +3,7 @@
 \include "../heji-ly/src/heji.ily"
 
 #(add-to-load-path (dirname (current-filename)))
-#(use-modules (heji-to-heji-ly) (heji-pitch-conversions))
+#(use-modules (heji-core) (heji-to-heji-ly) (heji-pitch-conversions))
 
 #(define (pitch-event? x)
     (and (ly:music? x) (eq? (ly:music-property x 'name) 'NoteEvent)))
@@ -51,3 +51,10 @@ heji =
     (if (string? ratio-or-alteration)
         #{ \heji-alteration #note #ratio-or-alteration #}
         #{ \heji-relative #note #ratio-or-alteration #} ))
+
+heji-n =
+#(define-music-function (note ratio) (pitch-event? rational?)
+    (let*
+        ((pitch (ly:music-property note 'pitch))
+         (heji-pitch (normalise-ratio (* ratio (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch))))))
+         #{ \heji-render #note #heji-pitch #} ))
