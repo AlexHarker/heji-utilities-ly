@@ -5,6 +5,11 @@
 #(add-to-load-path (dirname (current-filename)))
 #(use-modules (heji-core) (heji-to-heji-ly) (heji-pitch-conversions))
 
+#(define heji-normalisation-reference 1/1)
+
+#(define (normalise-to-reference x)
+    (normalise-ratio (/ x heji-normalisation-reference)))
+
 #(define (pitch-event? x)
     (and (ly:music? x) (eq? (ly:music-property x 'name) 'NoteEvent)))
 
@@ -13,6 +18,10 @@
 
 #(define (rational-or-string? x)
     (or (rational? x) (string? x)))
+
+heji-set-normalisation-reference =
+#(define-void-function (note) (ly:pitch?)
+    (set! heji-normalisation-reference (pitch-to-ratio (ly:pitch-notename note) (ly:pitch-octave note) (ly:pitch-alteration note))))
 
 heji-direct =
 #(define-music-function (note) (heji-note-event?)
@@ -43,9 +52,8 @@ heji-relative-normalised =
 #(define-music-function (octave note ratio) ((integer? #f) pitch-event? rational?)
     (let*
         ((pitch (ly:music-property note 'pitch))
-         (heji-pitch (* (expt 2 (if octave octave 0)) (normalise-ratio
-                      (* ratio
-                      (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch)))))))
+         (heji-pitch (* (expt 2 (if octave octave 0)) (* heji-normalisation-reference (normalise-to-reference (* ratio
+                      (pitch-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch))))))))
          #{ \heji-render #note #heji-pitch #} ))
 
 heji-alteration =
@@ -59,8 +67,8 @@ heji-alteration-normalised =
 #(define-music-function (octave note alteration) ((integer? #f) pitch-event? string?)
     (let*
         ((pitch (ly:music-property note 'pitch))
-         (heji-pitch (* (expt 2 (if octave octave 0)) (normalise-ratio
-                      (pitch-and-alteration-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch) alteration)))))
+         (heji-pitch (* (expt 2 (if octave octave 0)) (* heji-normalisation-reference (normalise-to-reference
+                      (pitch-and-alteration-to-ratio (ly:pitch-notename pitch) (ly:pitch-octave pitch) (ly:pitch-alteration pitch) alteration))))))
          #{ \heji-render #note #heji-pitch #} ))
 
 heji =
